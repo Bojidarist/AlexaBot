@@ -1,14 +1,11 @@
-﻿using System;
-
-namespace AlexaBotConsoleApp
+﻿namespace AlexaBotConsoleApp
 {
     class Program
     {
         static void Main()
         {
-            Console.WriteLine("Hello World!");
-
-            Console.ReadKey();
+            // Start the bot
+            new Bootstrap().StartAsync().GetAwaiter().GetResult();
         }
     }
 }
