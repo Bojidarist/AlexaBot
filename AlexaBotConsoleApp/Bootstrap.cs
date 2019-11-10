@@ -41,6 +41,8 @@ namespace AlexaBotConsoleApp
         /// </summary>
         public async Task StartAsync()
         {
+            // Tokens should be considered secret data and never hard-coded.
+            // We can read from the environment variable to avoid hard-coding.
             await _client.LoginAsync(TokenType.Bot, Environment.GetEnvironmentVariable(tokenVar, EnvironmentVariableTarget.User));
             await _client.StartAsync();
 
