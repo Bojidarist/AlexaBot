@@ -1,6 +1,10 @@
-﻿using Discord;
+﻿using AlexaBotConsoleApp.Services;
+using Discord;
+using Discord.Commands;
 using Discord.WebSocket;
+using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace AlexaBotConsoleApp
@@ -9,8 +13,9 @@ namespace AlexaBotConsoleApp
     {
         #region Private members
 
-        // The bot client
-        private readonly DiscordSocketClient _client;
+        // The client
+        private DiscordSocketClient _client;
+
         // The environment variable with the bot token
         private readonly string tokenVar = "AlexaBotToken";
 
@@ -21,16 +26,7 @@ namespace AlexaBotConsoleApp
         /// <summary>
         /// Default constructor
         /// </summary>
-        public Bootstrap()
-        {
-            // It is recommended to Dispose of a client when you are finished
-            // using it, at the end of your app's lifetime.
-            _client = new DiscordSocketClient();
-
-            _client.Log += LogAsync;
-            _client.Ready += ReadyAsync;
-            _client.MessageReceived += MessageReceivedAsync;
-        }
+        public Bootstrap() { }
 
         #endregion
 
@@ -41,44 +37,36 @@ namespace AlexaBotConsoleApp
         /// </summary>
         public async Task StartAsync()
         {
-            // Tokens should be considered secret data and never hard-coded.
-            // We can read from the environment variable to avoid hard-coding.
-            await _client.LoginAsync(TokenType.Bot, Environment.GetEnvironmentVariable(tokenVar, EnvironmentVariableTarget.User));
-            await _client.StartAsync();
-
-            // Block the program until it is closed
-            await Task.Delay(-1);
-        }
-
-        #endregion
-
-        #region Tasks
-
-        /// <summary>
-        /// Fires when a message is received in a channel where the bot is connected
-        /// </summary>
-        /// <param name="msg">The message</param>
-        private async Task MessageReceivedAsync(SocketMessage msg)
-        {
-            if (msg.Author.Id == _client.CurrentUser.Id)
+            using (var services = ConfigureServices())
             {
-                return;
-            }
+                // It is recommended to Dispose of a client when you are finished
+                // using it, at the end of your app's lifetime.
+                _client = services.GetRequiredService<DiscordSocketClient>();
 
-            if (msg.Content == "!ping")
-            {
-                await msg.Channel.SendMessageAsync("Pong!");
+                _client.Log += LogAsync;
+                services.GetRequiredService<CommandService>().Log += LogAsync;
+
+                // Tokens should be considered secret data and never hard-coded.
+                // We can read from the environment variable to avoid hard-coding.
+                await _client.LoginAsync(TokenType.Bot, Environment.GetEnvironmentVariable(tokenVar, EnvironmentVariableTarget.User));
+                await _client.StartAsync();
+
+                // Here we initialize the logic required to register our commands.
+                await services.GetRequiredService<CommandHandlingService>().InitializeAsync();
+
+                // Block the program until it is closed
+                await Task.Delay(-1);
             }
         }
 
-        /// <summary>
-        /// Fires when the bot is ready
-        /// </summary>
-        private Task ReadyAsync()
+        private ServiceProvider ConfigureServices()
         {
-            Console.WriteLine($"Client: { _client.CurrentUser } is connected!");
-
-            return Task.CompletedTask;
+            return new ServiceCollection()
+                .AddSingleton<DiscordSocketClient>()
+                .AddSingleton<CommandService>()
+                .AddSingleton<CommandHandlingService>()
+                .AddSingleton<HttpClient>()
+                .BuildServiceProvider();
         }
 
         /// <summary>
@@ -88,7 +76,6 @@ namespace AlexaBotConsoleApp
         private Task LogAsync(LogMessage log)
         {
             Console.WriteLine(log);
-
             return Task.CompletedTask;
         }
 
