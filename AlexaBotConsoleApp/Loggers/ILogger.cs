@@ -3,6 +3,12 @@
     public interface ILogger
     {
         /// <summary>
+        /// Log a uncategorized message
+        /// </summary>
+        /// <param name="message">The message</param>
+        public void Log(object message);
+
+        /// <summary>
         /// Log some info
         /// </summary>
         /// <param name="message">The info</param>

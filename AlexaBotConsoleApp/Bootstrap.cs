@@ -20,6 +20,11 @@ namespace AlexaBotConsoleApp
         // The environment variable with the bot token
         private readonly string tokenVar = "AlexaBotToken";
 
+        /// <summary>
+        /// Local logger
+        /// </summary>
+        private readonly ILogger _logger;
+
         #endregion
 
         #region Constructors
@@ -27,7 +32,7 @@ namespace AlexaBotConsoleApp
         /// <summary>
         /// Default constructor
         /// </summary>
-        public Bootstrap() { }
+        public Bootstrap(ILogger logger) { _logger = logger; }
 
         #endregion
 
@@ -80,7 +85,7 @@ namespace AlexaBotConsoleApp
         /// <param name="log">The log</param>
         private Task LogAsync(LogMessage log)
         {
-            Console.WriteLine(log);
+            _logger.Log(log);
             return Task.CompletedTask;
         }
 
