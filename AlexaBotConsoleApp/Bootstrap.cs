@@ -59,7 +59,7 @@ namespace AlexaBotConsoleApp
             // Here we initialize the logic required to register our commands.
             await services.GetRequiredService<CommandHandlingService>().InitializeAsync();
 
-            // Block the program until it is closed
+            // Make sure the program does not close
             await Task.Delay(-1);
         }
 
