@@ -67,6 +67,7 @@ namespace AlexaBotConsoleApp
                 .AddSingleton<CommandService>()
                 .AddSingleton<CommandHandlingService>()
                 .AddSingleton<AudioService>()
+                .AddSingleton<VoiceRecordingService>()
                 .AddSingleton<HttpClient>()
                 .BuildServiceProvider();
         }

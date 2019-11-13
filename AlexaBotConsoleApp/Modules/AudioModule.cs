@@ -32,19 +32,19 @@ namespace AlexaBotConsoleApp.Modules
         // You *MUST* mark these commands with 'RunMode.Async'
         // otherwise the bot will not respond until the Task times out.
         [Command("join", RunMode = RunMode.Async), Summary("Joins a voice channel")]
-        public async Task JoinCmd()
+        public async Task JoinCommand()
         {
             await _service.JoinAudio(Context.Guild, (Context.User as IGuildUser).VoiceChannel, Context.Channel);
         }
 
         [Command("leave", RunMode = RunMode.Async), Summary("Leaves a voice channel")]
-        public async Task LeaveCmd()
+        public async Task LeaveCommand()
         {
             await _service.LeaveAudio(Context.Guild);
         }
 
         [Command("play", RunMode = RunMode.Async), Summary("Plays audio in a voice channel")]
-        public async Task PlayCmd([Remainder] string song = null)
+        public async Task PlayCommand([Remainder] string song = null)
         {
             await _service.SendAudioAsync(Context.Guild, Context.Channel, song);
         }
