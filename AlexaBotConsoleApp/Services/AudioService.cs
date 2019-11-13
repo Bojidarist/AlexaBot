@@ -1,6 +1,6 @@
-﻿using Discord;
+﻿using AlexaBotConsoleApp.Loggers;
+using Discord;
 using Discord.Audio;
-using System;
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.IO;
@@ -17,6 +17,24 @@ namespace AlexaBotConsoleApp.Services
         /// </summary>
         private readonly ConcurrentDictionary<ulong, IAudioClient> ConnectedChannels = new ConcurrentDictionary<ulong, IAudioClient>();
 
+        /// <summary>
+        /// A local logger
+        /// </summary>
+        private readonly ILogger _logger;
+
+        #endregion
+
+        #region Constructors
+
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        /// <param name="logger">A local logger</param>
+        public AudioService(ILogger logger)
+        {
+            _logger = logger;
+        }
+
         #endregion
 
         #region Methods
@@ -26,7 +44,7 @@ namespace AlexaBotConsoleApp.Services
         /// </summary>
         /// <param name="guild">The guild the bot is connected to</param>
         /// <param name="target">The target voice channel</param>
-        /// <param name="context">The command context that allows sending messages to the channel etc.</param>
+        /// <param name="mChannel">The message channel that allows sending messages etc.</param>
         public async Task JoinAudio(IGuild guild, IVoiceChannel target, IMessageChannel mChannel = null)
         {
             if (target == null)
@@ -41,7 +59,7 @@ namespace AlexaBotConsoleApp.Services
 
             if (ConnectedChannels.TryAdd(guild.Id, audioClient))
             {
-                Console.WriteLine($"Connected to a voice channel in: { guild.Name }");
+                _logger.LogInfo($"Connected to a voice channel in: { guild.Name }");
             }
         }
 
@@ -55,6 +73,7 @@ namespace AlexaBotConsoleApp.Services
             {
                 await client.StopAsync();
                 client.Dispose();
+                _logger.LogInfo($"Disconnected from a voice channel in: { guild.Name }");
             }
         }
 
@@ -70,16 +89,21 @@ namespace AlexaBotConsoleApp.Services
             // Your task: Get a full path to the file if the value of 'path' is only a filename.
             if (!File.Exists(path))
             {
-                await channel.SendMessageAsync("File does not exist.");
+                _logger.LogError($"File: { path } does not exist!");
                 return;
             }
             if (ConnectedChannels.TryGetValue(guild.Id, out IAudioClient client))
             {
-                Console.WriteLine($"Playing { path } to { guild.Name }");
+                _logger.LogInfo($"Playing { path } to { guild.Name }");
+                await channel.SendMessageAsync($"Playing { path }!");
                 using var ffmpeg = CreateProcess(path);
                 using var stream = client.CreatePCMStream(AudioApplication.Music);
                 try { await ffmpeg.StandardOutput.BaseStream.CopyToAsync(stream); }
-                finally { await stream.FlushAsync(); }
+                finally
+                {
+                    await stream.FlushAsync();
+                    _logger.LogInfo($"Finished playing { path } to { guild.Name }");
+                }
             }
         }
 

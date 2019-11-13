@@ -1,4 +1,5 @@
-﻿using AlexaBotConsoleApp.Services;
+﻿using AlexaBotConsoleApp.Loggers;
+using AlexaBotConsoleApp.Services;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
@@ -68,6 +69,7 @@ namespace AlexaBotConsoleApp
                 .AddSingleton<CommandHandlingService>()
                 .AddSingleton<AudioService>()
                 .AddSingleton<VoiceRecordingService>()
+                .AddSingleton<ILogger>(new ConsoleLogger())
                 .AddSingleton<HttpClient>()
                 .BuildServiceProvider();
         }
