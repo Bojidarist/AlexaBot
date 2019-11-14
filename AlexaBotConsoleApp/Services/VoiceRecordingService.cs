@@ -1,9 +1,11 @@
-﻿using AlexaBotConsoleApp.Loggers;
+﻿using AlexaBotConsoleApp.Data;
+using AlexaBotConsoleApp.Loggers;
 using Discord;
 using Discord.Audio.Streams;
 using Discord.WebSocket;
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace AlexaBotConsoleApp.Services
@@ -43,7 +45,12 @@ namespace AlexaBotConsoleApp.Services
             var socketUser = (user as SocketGuildUser);
             var userAduioStream = (InputStream)socketUser.AudioStream;
 
-            using var ffmpeg = CreateFfmpegOut($"{ user.Id }.wav");
+            string savePath = Path.Combine(DataPaths.VoiceRecordingPath, $"{ user.Id.ToString() }.wav");
+            if (File.Exists(savePath))
+            {
+                File.Delete(savePath);
+            }
+            using var ffmpeg = CreateFfmpegOut($"{ savePath }");
             using var ffmpegOutStdinStream = ffmpeg.StandardInput.BaseStream;
             DateTime start = DateTime.Now;
             try
@@ -65,7 +72,6 @@ namespace AlexaBotConsoleApp.Services
                 // the ffmpeg process does not close
                 ffmpeg.Kill();
                 _logger.LogInfo($"Finished listening to { user.Username }!");
-                _logger.LogInfo($"Saved recording to { user.Id }.wav!");
             }
         }
 

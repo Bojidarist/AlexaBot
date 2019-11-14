@@ -1,4 +1,5 @@
-﻿using AlexaBotConsoleApp.Loggers;
+﻿using AlexaBotConsoleApp.Helpers;
+using AlexaBotConsoleApp.Loggers;
 using AlexaBotConsoleApp.Services;
 using Discord;
 using Discord.Commands;
@@ -43,6 +44,9 @@ namespace AlexaBotConsoleApp
         /// </summary>
         public async Task StartAsync()
         {
+            Initializer.InitPaths();
+            _logger.LogInfo("Initialized paths");
+
             using var services = ConfigureServices();
             // It is recommended to Dispose of a client when you are finished
             // using it, at the end of your app's lifetime.
