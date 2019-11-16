@@ -46,7 +46,7 @@ namespace AlexaBotConsoleApp.Modules
         [Command("play", RunMode = RunMode.Async), Summary("Plays audio in a voice channel")]
         public async Task PlayCommand([Remainder] string song = null)
         {
-            await _service.SendAudioAsync(Context.Guild, Context.Channel, song);
+            await _service.DownloadAndPlayAudioAsync(song, Context);
         }
 
         #endregion
