@@ -98,7 +98,7 @@ namespace AlexaBotConsoleApp.Services
         /// <param name="guild">The guild the bot is connected to</param>
         /// <param name="channel">The voice channel the bot is connected to</param>
         /// <param name="path">The path to an audio file</param>
-        public async Task SendAudioAsync(IGuild guild, IMessageChannel channel, string path)
+        public async Task SendAudioAsync(IGuild guild, IMessageChannel channel, string path, string songName = "")
         {
             if (string.IsNullOrWhiteSpace(path)) { return; }
             // Your task: Get a full path to the file if the value of 'path' is only a filename.
@@ -109,7 +109,7 @@ namespace AlexaBotConsoleApp.Services
             }
             if (ConnectedChannels.TryGetValue(guild.Id, out IAudioClient client))
             {
-                _logger.LogInfo($"Playing { path } to { guild.Name }");
+                _logger.LogInfo($"Playing { path }({ songName }) to { guild.Name } requested in channel: { channel.Name }");
                 using var ffmpeg = CreateProcess(path);
                 using var stream = client.CreatePCMStream(AudioApplication.Music);
                 try { await ffmpeg.StandardOutput.BaseStream.CopyToAsync(stream); }
@@ -117,7 +117,7 @@ namespace AlexaBotConsoleApp.Services
                 {
                     ffmpeg.Kill();
                     await stream.FlushAsync();
-                    _logger.LogInfo($"Finished playing { path } to { guild.Name }");
+                    _logger.LogInfo($"Finished playing { path }({ songName }) to { guild.Name }");
                 }
             }
         }
@@ -141,7 +141,7 @@ namespace AlexaBotConsoleApp.Services
             {
                 if (RunningSongs.TryAdd(context.Guild.Id, songPath))
                 {
-                    await SendAudioAsync(context.Guild, context.Channel, songPath);
+                    await SendAudioAsync(context.Guild, context.Channel, songPath, input);
                     File.Delete(songPath);
                     if (!RunningSongs.TryRemove(context.Guild.Id, out _))
                     {
