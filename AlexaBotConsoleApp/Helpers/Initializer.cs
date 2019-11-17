@@ -1,4 +1,5 @@
 ﻿using AlexaBotConsoleApp.Data;
+using AlexaBotConsoleApp.Loggers;
 using System.IO;
 
 namespace AlexaBotConsoleApp.Helpers
@@ -6,9 +7,17 @@ namespace AlexaBotConsoleApp.Helpers
     public static class Initializer
     {
         /// <summary>
+        /// Initializes everything in the <see cref="Initializer"/>
+        /// </summary>
+        public static void InitAll(ILogger logger)
+        {
+            InitPaths(logger);
+        }
+
+        /// <summary>
         /// Initializes all directories
         /// </summary>
-        public static void InitPaths()
+        public static void InitPaths(ILogger logger)
         {
             if (Directory.Exists(DataPaths.AudioPath))
             {
@@ -27,6 +36,7 @@ namespace AlexaBotConsoleApp.Helpers
             }
             Directory.CreateDirectory(DataPaths.VoiceRecordingPath);
 
+            logger.LogInfo("Initialize paths");
         }
     }
 }

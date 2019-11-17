@@ -1,11 +1,11 @@
-﻿using AlexaBotConsoleApp.Helpers;
+﻿using AlexaBotConsoleApp.Data;
+using AlexaBotConsoleApp.Helpers;
 using AlexaBotConsoleApp.Loggers;
 using AlexaBotConsoleApp.Services;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
-using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -17,9 +17,6 @@ namespace AlexaBotConsoleApp
 
         // The client
         private DiscordSocketClient _client;
-
-        // The environment variable with the bot token
-        private readonly string tokenVar = "AlexaBotToken";
 
         /// <summary>
         /// Local logger
@@ -44,8 +41,7 @@ namespace AlexaBotConsoleApp
         /// </summary>
         public async Task StartAsync()
         {
-            Initializer.InitPaths();
-            _logger.LogInfo("Initialized paths");
+            Initializer.InitAll(_logger);
 
             using var services = ConfigureServices();
             // It is recommended to Dispose of a client when you are finished
@@ -57,7 +53,7 @@ namespace AlexaBotConsoleApp
 
             // Tokens should be considered secret data and never hard-coded.
             // We can read from the environment variable to avoid hard-coding.
-            await _client.LoginAsync(TokenType.Bot, Environment.GetEnvironmentVariable(tokenVar, EnvironmentVariableTarget.User));
+            await _client.LoginAsync(TokenType.Bot, SecretData.AlexaBotToken);
             await _client.StartAsync();
 
             // Here we initialize the logic required to register our commands.
