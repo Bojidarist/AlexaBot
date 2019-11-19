@@ -47,6 +47,7 @@ namespace AlexaBotConsoleApp
             // It is recommended to Dispose of a client when you are finished
             // using it, at the end of your app's lifetime.
             _client = services.GetRequiredService<DiscordSocketClient>();
+            await _client.SetGameAsync("in the Great Library of Alexandria", null, ActivityType.Playing);
 
             _client.Log += LogAsync;
             services.GetRequiredService<CommandService>().Log += LogAsync;
