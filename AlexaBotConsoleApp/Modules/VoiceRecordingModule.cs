@@ -31,7 +31,7 @@ namespace AlexaBotConsoleApp.Modules
         [Command("listen", RunMode = RunMode.Async), Summary("Records a person's voice")]
         public async Task ListenCommand()
         {
-            await _service.ListenUserAsync(await Context.Guild.GetUserAsync(Context.User.Id));
+            await _service.ListenUserAsync(await Context.Guild.GetUserAsync(Context.User.Id), Context);
         }
 
         #endregion

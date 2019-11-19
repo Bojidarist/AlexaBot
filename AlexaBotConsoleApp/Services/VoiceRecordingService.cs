@@ -1,7 +1,10 @@
 ﻿using AlexaBotConsoleApp.Data;
+using AlexaBotConsoleApp.Helpers;
 using AlexaBotConsoleApp.Loggers;
+using AlexaBotConsoleApp.Models;
 using Discord;
 using Discord.Audio.Streams;
+using Discord.Commands;
 using Discord.WebSocket;
 using System;
 using System.Diagnostics;
@@ -19,6 +22,16 @@ namespace AlexaBotConsoleApp.Services
         /// </summary>
         private readonly ILogger _logger;
 
+        /// <summary>
+        /// A local <see cref="AzureSpeechService"/>
+        /// </summary>
+        private readonly AzureSpeechService _azureSpeech;
+
+        /// <summary>
+        /// A local <see cref="AudioService"/>
+        /// </summary>
+        private readonly AudioService _audioService;
+
         #endregion
 
         #region Constructors
@@ -27,9 +40,13 @@ namespace AlexaBotConsoleApp.Services
         /// Default constructor
         /// </summary>
         /// <param name="logger">A local logger</param>
-        public VoiceRecordingService(ILogger logger)
+        /// <param name="audioService">A local audio service</param>
+        /// <param name="azureSpeechService">A local azure speech service</param>
+        public VoiceRecordingService(ILogger logger, AzureSpeechService azureSpeechService, AudioService audioService)
         {
             _logger = logger;
+            _azureSpeech = azureSpeechService;
+            _audioService = audioService;
         }
 
         #endregion
@@ -40,7 +57,8 @@ namespace AlexaBotConsoleApp.Services
         /// Listens to a user and records the audio
         /// </summary>
         /// <param name="user">The user</param>
-        public async Task ListenUserAsync(IGuildUser user)
+        /// <param name="context">Information about the command</param>
+        public async Task ListenUserAsync(IGuildUser user, ICommandContext context)
         {
             var socketUser = (user as SocketGuildUser);
             var userAduioStream = (InputStream)socketUser.AudioStream;
@@ -72,6 +90,28 @@ namespace AlexaBotConsoleApp.Services
                 // the ffmpeg process does not close
                 ffmpeg.Kill();
                 _logger.LogInfo($"Finished listening to { user.Username }!");
+            }
+
+            try
+            {
+                string voiceCommandText = await _azureSpeech.RecognizeSpeechAsync(savePath);
+                if (!string.IsNullOrWhiteSpace(voiceCommandText))
+                {
+                    VoiceCommand voiceCommand = voiceCommandText.ParseVoiceCommand();
+                    if (voiceCommand.Invoke == "alexa")
+                    {
+                        switch (voiceCommand.Command)
+                        {
+                            case "play": await _audioService.DownloadAndPlayAudioAsync(voiceCommand.Argument, context); break;
+                            case "leave": await _audioService.LeaveAudio(context.Guild); break;
+                            default: await context.Channel.SendMessageAsync("Sorry, I didn't quite catch that."); break;
+                        }
+                    }
+                }
+            }
+            finally
+            {
+                File.Delete(savePath);
             }
         }
 

@@ -75,6 +75,7 @@ namespace AlexaBotConsoleApp
                 .AddSingleton<AudioService>()
                 .AddSingleton<VoiceRecordingService>()
                 .AddSingleton<ILogger>(new ConsoleLogger())
+                .AddSingleton<AzureSpeechService>()
                 .AddSingleton<HttpClient>()
                 .BuildServiceProvider();
         }
