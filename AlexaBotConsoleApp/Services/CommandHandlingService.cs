@@ -98,7 +98,7 @@ namespace AlexaBotConsoleApp.Services
 
             // the command failed, let's notify the user that something happened.
             _logger.LogError($"Error: { result }");
-            await context.Channel.SendMessageAsync($"Sorry, { context.User.Username }. I could not execute that command :(");
+            await context.Channel.SendMessageAsync($"Sorry { context.User.Username }, I didn't quite catch that :cry:");
         }
 
         #endregion
