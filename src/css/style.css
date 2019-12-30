@@ -1,0 +1,74 @@
+/* 
+Color Palette
+Black -> #000000
+Purple Taupe -> #502f4c
+Old Lavender -> #70587c
+Lavender Gray -> #c8b8db
+White Smoke -> #f9f4f5
+White -> #ffffff
+Orange -> #fb8c00
+Light Orange -> #ffbd45
+Dark Orange -> #c25e00
+*/
+
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.clear {
+    clear: both;
+}
+
+a {
+    color: #fb8c00;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #ffbd45;
+}
+
+a:active,
+a:focus {
+    outline: 0;
+    border: none;
+}
+
+.MenuBar {
+    background-color: #70587c;
+    color: #ffffff;
+}
+
+.MenuBarIcon {
+    width: 32px;
+    height: 32px;
+}
+
+.MenuList {
+    list-style: none;
+    overflow: hidden;
+}
+
+.MenuList li {
+    display: inline-block;
+    margin: 8px;
+    vertical-align: middle;
+}
+
+.MenuList a {
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.MenuList a:hover {
+    color: #ffbd45;
+}
+
+.ParagraphCenterOnScreen {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
