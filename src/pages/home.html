@@ -14,8 +14,37 @@
             <li><a href="../pages/home.html">Home</a></li>
             <li><a href="../pages/commands.html">Commands</a></li>
             <li><a href="../pages/more.html">More</a></li>
+            <li style="float: right;" class="ButtonLook"><a href="https://github.com/Bojidarist/AlexaBot">Github</a></li>
         </ul>
     </div>
-    <h1>Home</h1>
+    <div class="Main">
+        <div class="Box">
+            <h1 class="CenterText BiggestText">Info</h1>
+            <p class="CenterText BigText">AlexaBot is a multifunctional discord bot.</p>
+            <ul class="CenterText">
+                <li class="Margin8">Text commands</li>
+                <li class="Margin8">Voice commands</li>
+                <li class="Margin8">Play audio</li>
+            </ul>
+        </div>
+        <div class="Box">
+            <h1 class="CenterText BiggestText">Install</h1>
+            <ol class="CenterText Margin8">
+                <li class="Margin8">Download the latest release or clone the project from <a href="https://github.com/Bojidarist/AlexaBot">github</a>.</li>
+                <li class="Margin8">Make sure you have <a href="https://dotnet.microsoft.com/download">.NET Core 3+</a> installed.</li>
+                <li class="Margin8">
+                    Set the <a href="https://docs.microsoft.com/en-us/azure/cognitive-services/cognitive-services-apis-create-account?tabs=multiservice%2Cwindows#configure-an-environment-variable-for-authentication">environment variables</a> for discord/azure.
+                    <ul>
+                        <li>Discord secret variable name - AlexaBotToken</li>
+                        <li>Azure token variable name - AzureSpeechToken</li>
+                        <li>Azure endpoint variable name - AzureSpeechEndpoint</li>
+                    </ul>
+                </li>
+                <li class="Margin8">Download <a href="https://ffmpeg.zeranoe.com/builds/">FFmpeg</a> and place it in the executable folder.</li>
+                <li class="Margin8">Download <a href="https://ytdl-org.github.io/youtube-dl/download.html">Youtube-DL</a> and place it in the executable folder.</li>
+                <li class="Margin8">Make sure to download <a href="https://discord.foxbot.me/docs/guides/voice/sending-voice.html">opus and libsodium</a> and place them in the executable folder.</li>
+            </ol>
+        </div>
+    </div>
 </body>
 </html>

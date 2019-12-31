@@ -36,9 +36,17 @@ a:focus {
     border: none;
 }
 
+.Main{
+    /* Add margin to avoid content overlay */
+    margin-top: 100px;
+}
+
 .MenuBar {
-    background-color: #70587c;
+    background-color: #70587ccc;
     color: #ffffff;
+    position: fixed;
+    top: 0;
+    width: 100%;
 }
 
 .MenuBarIcon {
@@ -71,4 +79,55 @@ a:focus {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+}
+
+.Box{
+    margin: 48px;
+    padding: 16px;
+    border-radius: 16px;
+    background-color: #f9f4f5;
+}
+
+.CenterText{
+    text-align: center;
+}
+
+.BiggestText{
+    font-size: 3em;
+}
+
+.BigText{
+    font-size: 2em;
+}
+
+.NormalText{
+    font-size: 1em;
+}
+
+.Margin4{
+    margin: 4px;
+}
+
+.Margin8{
+    margin: 8px;
+}
+
+.Margin12{
+    margin: 12px;
+}
+
+.Margin16{
+    margin: 16px;
+}
+
+.ButtonLook{
+    background-color: #738adb;
+    border-radius: 4px;
+    padding: 8px;
+}
+
+.MoreInfoIcons{
+    width: 64px;
+    height: 64px;
+    border-radius: 8px;
 }
