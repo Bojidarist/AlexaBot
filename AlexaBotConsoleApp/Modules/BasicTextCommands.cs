@@ -10,5 +10,11 @@ namespace AlexaBotConsoleApp.Modules
         {
             await Context.Channel.SendMessageAsync("Pong");
         }
+
+        [Command("help")]
+        public async Task HelpCommand()
+        {
+            await Context.Channel.SendMessageAsync("https://bojidarist.github.io/AlexaBot");
+        }
     }
 }
